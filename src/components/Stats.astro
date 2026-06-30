@@ -1,0 +1,62 @@
+---
+const stats = [
+  { value: '+20', label: 'Años de Experiencia' },
+  { value: '100%', label: 'Materiales Premium' },
+  { value: 'Gold', label: 'Garantía de Élite' },
+];
+---
+
+<section
+  class="w-full max-w-7xl mx-auto px-6 md:px-16 py-24 md:py-32 flex flex-col items-center justify-center"
+>
+  <h2
+    class="stats-heading text-display-lg-mobile md:text-headline-lg text-primary text-center mb-16 md:mb-24 opacity-0 translate-y-5"
+  >
+    Por qué elegirnos
+  </h2>
+
+  <div class="flex flex-col gap-16 md:gap-24 w-full max-w-3xl items-center">
+    {
+      stats.map((stat, index) => (
+        <div
+          class="stat-item flex flex-col items-center text-center w-full opacity-0 translate-y-5"
+          data-index={index}
+        >
+          <div class="text-display-lg-mobile md:text-display-lg text-secondary mb-4 font-display">
+            {stat.value}
+          </div>
+          <div class="text-label-caps text-primary tracking-widest border-t border-primary/10 pt-4 w-48 mx-auto">
+            {stat.label}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  import { animate, inView } from 'motion';
+
+  const heading = document.querySelector<HTMLElement>('.stats-heading');
+  if (heading) {
+    inView(heading, (info) => {
+      animate(
+        info.target as HTMLElement,
+        { opacity: [0, 1], transform: ['translateY(20px)', 'translateY(0px)'] },
+        { duration: 0.6 }
+      );
+    });
+  }
+
+  const items = document.querySelectorAll<HTMLElement>('.stat-item');
+  items.forEach((item) => {
+    const index = Number(item.dataset.index ?? 0);
+    inView(item, (info) => {
+      animate(
+        info.target as HTMLElement,
+        { opacity: [0, 1], transform: ['translateY(20px)', 'translateY(0px)'] },
+        { duration: 0.6, delay: index * 0.15 }
+      );
+    });
+  });
+</script>
