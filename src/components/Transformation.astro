@@ -1,5 +1,7 @@
 ---
 import { BeforeAfterSlider } from './BeforeAfterSlider';
+import beforeImg from '../assets/before.jpg';
+import afterImg from '../assets/after.jpg';
 
 const benefits = [
   'Optimización de luz natural',
@@ -56,8 +58,8 @@ const benefits = [
     <!-- Interactive Slider (React island) -->
     <div data-animate="scale-in" class="w-full shadow-2xl" style="transition-delay: 200ms">
       <BeforeAfterSlider
-        beforeImage="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1000"
-        afterImage="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1000"
+        beforeImage={beforeImg.src}
+        afterImage={afterImg.src}
         client:visible
       />
     </div>
