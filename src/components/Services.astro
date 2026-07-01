@@ -1,48 +1,35 @@
 ---
 import afterImg from '../assets/after.jpg';
+import { business, content, type Locale, phoneHref } from '../data/site';
 
-const services = [
-  {
-    title: 'Kitchen Remodeling',
-    description: 'Custom layouts, cabinetry, lighting, surfaces, and finishes built for daily use and resale value.',
-    detail: 'Design-led upgrades',
-    image: afterImg.src,
-  },
-  {
-    title: 'Bathroom Renovations',
-    description: 'Clean waterproofing, tilework, fixtures, vanities, and spa-style details with careful execution.',
-    detail: 'Durable wet areas',
-    image:
-      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    title: 'Whole-Home Projects',
-    description: 'Interior renovations, additions, flooring, trim, and finish carpentry managed from plan to punch list.',
-    detail: 'Full project control',
-    image:
-      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800',
-  },
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
+const primaryPhoneHref = phoneHref(business.phone);
+const serviceImages = [
+  afterImg.src,
+  'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800',
 ];
-
-const primaryPhone = '+1 352-246-3543';
-const primaryPhoneHref = `tel:+${primaryPhone.replace(/\D/g, '')}`;
 ---
 
 <section class="w-full max-w-7xl mx-auto px-6 md:px-16 py-20 md:py-28 flex flex-col">
   <div data-animate="fade-up" class="max-w-3xl mb-12 md:mb-16">
-    <span class="text-label-caps text-secondary mb-4 block">Built for North Central Florida homes</span>
+    <span class="text-label-caps text-secondary mb-4 block">{copy.servicesIntro.eyebrow}</span>
     <h2 class="text-display-lg-mobile md:text-display-lg text-primary mb-5">
-      Remodeling services that make the next step obvious.
+      {copy.servicesIntro.heading}
     </h2>
     <p class="text-body-lg text-primary/72">
-      Beraja Remodeling helps Gainesville homeowners turn outdated rooms into polished, functional
-      spaces with a practical process and premium finish work.
+      {copy.servicesIntro.body}
     </p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-12 w-full">
     {
-      services.map((service, index) => (
+      copy.services.map((service, index) => (
         <article
           data-animate="fade-up"
           class="flex flex-col group bg-white border border-primary/10 shadow-[0_18px_55px_rgba(23,32,29,0.08)]"
@@ -50,7 +37,7 @@ const primaryPhoneHref = `tel:+${primaryPhone.replace(/\D/g, '')}`;
         >
           <div class="w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] overflow-hidden mb-6 relative bg-surface-dim">
             <img
-              src={service.image}
+              src={serviceImages[index]}
               alt={service.title}
               class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               loading="lazy"
@@ -66,7 +53,7 @@ const primaryPhoneHref = `tel:+${primaryPhone.replace(/\D/g, '')}`;
               href={primaryPhoneHref}
               class="mt-6 inline-flex text-button text-secondary hover:text-primary transition-colors"
             >
-              Discuss this project
+              {copy.cta.discuss}
             </a>
           </div>
         </article>

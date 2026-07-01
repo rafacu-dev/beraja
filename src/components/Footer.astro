@@ -1,7 +1,13 @@
 ---
-const currentYear = new Date().getFullYear();
+import { business, content, type Locale, phoneHref } from '../data/site';
 
-const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
+interface Props {
+  locale: Locale;
+}
+
+const currentYear = new Date().getFullYear();
+const { locale } = Astro.props;
+const copy = content[locale];
 ---
 
 <footer class="w-full bg-primary text-white pt-20 pb-10">
@@ -33,7 +39,7 @@ const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
         </h2>
       </div>
       <p class="text-white/50 text-body-md max-w-sm">
-        Construction and remodeling services for Gainesville, FL and nearby communities.
+        {copy.footer.summary}
       </p>
     </div>
 
@@ -61,13 +67,13 @@ const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
           <path d="M23 7a8 8 0 0 0-8-8"></path>
           <path d="M23 3a4 4 0 0 0-4-4"></path>
         </svg>
-        <h3 class="text-label-caps tracking-widest text-white/70">CONTACT</h3>
+        <h3 class="text-label-caps tracking-widest text-white/70">{copy.footer.contact}</h3>
       </div>
       <div class="flex flex-col gap-3">
         {
-          phones.map((phone) => (
+          business.phones.map((phone) => (
             <a
-              href={`tel:+1${phone.replace(/\D/g, '').slice(1)}`}
+              href={phoneHref(phone)}
               class="text-body-md text-white/80 hover:text-secondary transition-colors font-mono"
             >
               {phone}
@@ -79,10 +85,10 @@ const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
 
     <!-- Social / Location Links -->
     <div class="flex flex-col items-center md:items-end">
-      <h3 class="text-label-caps text-white/70 mb-6">LOCAL PRESENCE</h3>
+      <h3 class="text-label-caps text-white/70 mb-6">{copy.footer.local}</h3>
       <div class="flex items-center gap-4">
         <a
-          href="https://www.google.com/maps/place/Beraja+Remodeling+LLC/@29.6803102,-82.2962524,17z/data=!3m1!4b1!4m6!3m5!1s0x88e8a7ba8b3ef58b:0x4477fe32f390eeba!8m2!3d29.6803102!4d-82.2962524!16s%2Fg%2F11zg3ttp8g!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D"
+          href={business.mapUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Our Location"
@@ -107,7 +113,7 @@ const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
           </svg>
         </a>
         <a
-          href="https://www.facebook.com/profile.php?id=61559592172474"
+          href={business.facebookUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Facebook"
@@ -139,10 +145,10 @@ const phones = ['+1 352-246-3543', '+1 352-246-5346', '+1 352-246-2103'];
     class="max-w-7xl mx-auto px-6 md:px-16 mt-16 md:mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left"
   >
     <p class="text-white/40 text-xs font-sans tracking-wide">
-      © {currentYear} Beraja Remodeling LLC. All rights reserved.
+      © {currentYear} {business.name}. {copy.footer.rights}
     </p>
     <p class="text-white/40 text-xs font-sans tracking-wide uppercase">
-      Quality work you can trust
+      {copy.footer.tagline}
     </p>
   </div>
 </footer>

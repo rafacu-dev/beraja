@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from './Hero.astro';
+import Services from './Services.astro';
+import Transformation from './Transformation.astro';
+import Stats from './Stats.astro';
+import LocalSearchLinks from './LocalSearchLinks.astro';
+import Footer from './Footer.astro';
+import { absoluteUrl, business, content, serviceAreas, type Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
+const path = copy.path;
+const alternatePaths = {
+  en: content.en.path,
+  es: content.es.path,
+  'x-default': '/',
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HomeAndConstructionBusiness',
+    '@id': `${absoluteUrl(path)}#business`,
+    name: business.name,
+    url: absoluteUrl(path),
+    description: copy.description,
+    telephone: business.phone,
+    image: absoluteUrl('/favicon.svg'),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: business.addressLocality,
+      addressRegion: business.addressRegion,
+      addressCountry: business.addressCountry,
+    },
+    areaServed: serviceAreas.map((area) => `${area}, FL`),
+    sameAs: [business.facebookUrl, business.mapUrl],
+    makesOffer: copy.services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        areaServed: serviceAreas.map((area) => `${area}, FL`),
+      },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: business.name,
+    url: absoluteUrl('/'),
+    inLanguage: locale === 'es' ? 'es-US' : 'en-US',
+  },
+];
+---
+
+<Layout
+  title={copy.title}
+  description={copy.description}
+  keywords={copy.keywords}
+  lang={locale === 'es' ? 'es-US' : 'en-US'}
+  canonicalPath={path}
+  alternatePaths={alternatePaths}
+  structuredData={structuredData}
+>
+  <main class="w-full min-h-screen bg-surface selection:bg-secondary selection:text-white">
+    <Hero locale={locale} />
+    <Services locale={locale} />
+    <Transformation locale={locale} />
+    <Stats locale={locale} />
+    <LocalSearchLinks locale={locale} />
+    <Footer locale={locale} />
+  </main>
+</Layout>

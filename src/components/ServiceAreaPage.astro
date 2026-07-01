@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from './Footer.astro';
+import { absoluteUrl, business, content, phoneHref, serviceAlternatePaths, serviceAreas, servicePagePath, type Locale } from '../data/site';
+
+type ServicePage = Parameters<typeof servicePagePath>[0];
+
+interface Props {
+  page: ServicePage;
+}
+
+const { page } = Astro.props;
+const locale = page.locale as Locale;
+const copy = content[locale];
+const path = servicePagePath(page);
+const relatedServices = copy.services.map((service) => service.title).join(', ');
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: page.service,
+    description: page.description,
+    provider: {
+      '@type': 'HomeAndConstructionBusiness',
+      name: business.name,
+      telephone: business.phone,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: business.addressLocality,
+        addressRegion: business.addressRegion,
+        addressCountry: business.addressCountry,
+      },
+    },
+    areaServed: {
+      '@type': 'City',
+      name: `${page.city}, FL`,
+    },
+    serviceType: page.service,
+    url: absoluteUrl(path),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: business.name,
+        item: absoluteUrl(copy.path),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: page.heading,
+        item: absoluteUrl(path),
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  title={page.title}
+  description={page.description}
+  lang={locale === 'es' ? 'es-US' : 'en-US'}
+  canonicalPath={path}
+  alternatePaths={serviceAlternatePaths(page)}
+  structuredData={structuredData}
+>
+  <main class="min-h-screen bg-surface text-primary selection:bg-secondary selection:text-white">
+    <section class="bg-primary text-white">
+      <div class="max-w-7xl mx-auto px-6 md:px-16 py-20 md:py-28">
+        <a href={copy.path} class="text-label-caps text-secondary-light hover:text-white transition-colors">
+          Beraja Remodeling
+        </a>
+        <h1 class="font-display text-[44px] leading-[48px] md:text-[72px] md:leading-[76px] max-w-4xl mt-6 mb-6">
+          {page.heading}
+        </h1>
+        <p class="text-body-lg text-white/82 max-w-2xl mb-8">{page.body}</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a
+            href={phoneHref(business.phone)}
+            class="inline-flex items-center justify-center bg-secondary px-6 py-4 text-button text-white hover:bg-secondary-dark transition-colors"
+          >
+            {copy.cta.estimate}
+          </a>
+          <a
+            href={business.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center border border-white/35 px-6 py-4 text-button text-white hover:bg-white hover:text-primary transition-colors"
+          >
+            {copy.cta.local}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 md:px-16 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[1fr_0.72fr] gap-12">
+      <div>
+        <span class="text-label-caps text-secondary mb-4 block">
+          {locale === 'es' ? 'Servicio local' : 'Local service'}
+        </span>
+        <h2 class="text-headline-lg mb-6">
+          {locale === 'es'
+            ? `${page.service} para propietarios en ${page.city}, Florida`
+            : `${page.service} for homeowners in ${page.city}, Florida`}
+        </h2>
+        <p class="text-body-lg text-primary/74 mb-6">
+          {locale === 'es'
+            ? `Beraja Remodeling trabaja en ${page.city} y comunidades cercanas con servicios relacionados como ${relatedServices}. Nuestro objetivo es que cada remodelación tenga un alcance claro, buena comunicación y acabados que eleven el valor de la casa.`
+            : `Beraja Remodeling works in ${page.city} and nearby communities with related services including ${relatedServices}. Every remodel is planned around clear scope, communication, and finish work that improves the home.`}
+        </p>
+        <p class="text-body-lg text-primary/74">
+          {locale === 'es'
+            ? 'Si estás comparando compañías de remodelación o construcción en el norte de Florida, podemos conversar sobre el alcance, materiales, presupuesto y calendario antes de comenzar.'
+            : 'If you are comparing remodeling or construction companies in North Florida, we can discuss scope, materials, budget, and schedule before work begins.'}
+        </p>
+      </div>
+
+      <aside class="bg-white border border-primary/10 p-6 md:p-8 shadow-[0_14px_45px_rgba(23,32,29,0.06)]">
+        <h2 class="text-headline-md mb-5">{locale === 'es' ? 'Áreas de servicio' : 'Service areas'}</h2>
+        <div class="flex flex-wrap gap-2">
+          {serviceAreas.map((area) => <span class="border border-primary/12 px-3 py-2 text-sm">{area}, FL</span>)}
+        </div>
+        <div class="mt-8 border-t border-primary/10 pt-6">
+          <p class="text-label-caps text-secondary mb-3">{copy.footer.contact}</p>
+          <a href={phoneHref(business.phone)} class="text-body-lg font-mono hover:text-secondary transition-colors">
+            {business.phone}
+          </a>
+        </div>
+      </aside>
+    </section>
+
+    <Footer locale={locale} />
+  </main>
+</Layout>

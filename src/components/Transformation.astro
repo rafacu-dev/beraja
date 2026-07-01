@@ -2,12 +2,14 @@
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 import beforeImg from '../assets/before.jpg';
 import afterImg from '../assets/after.jpg';
+import { content, type Locale } from '../data/site';
 
-const benefits = [
-  'Local planning for Gainesville-area homes',
-  'Material guidance before the first demo day',
-  'A cleaner closeout with punch-list accountability',
-];
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
 ---
 
 <section class="w-full bg-[#eef3ef]">
@@ -15,20 +17,19 @@ const benefits = [
     class="max-w-7xl mx-auto px-6 md:px-16 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center"
   >
     <div data-animate="fade-left" class="flex flex-col">
-      <span class="text-label-caps text-secondary mb-4 block">A visible transformation</span>
+      <span class="text-label-caps text-secondary mb-4 block">{copy.transformation.eyebrow}</span>
       <h2
         class="text-display-lg-mobile md:text-headline-lg lg:text-display-lg mb-6 leading-tight"
       >
-        From empty shell to a room that earns attention.
+        {copy.transformation.heading}
       </h2>
       <p class="text-body-lg text-primary/80 mb-10 max-w-lg">
-        The right remodel should look beautiful, but it also has to work: better light, better
-        flow, smarter storage, and finishes that hold up after the reveal.
+        {copy.transformation.body}
       </p>
 
       <ul class="space-y-4">
         {
-          benefits.map((benefit) => (
+          copy.transformation.benefits.map((benefit) => (
             <li class="flex items-center gap-4 text-body-md text-primary/90">
               <!-- CheckCircle2 icon -->
               <svg
@@ -62,6 +63,8 @@ const benefits = [
       <BeforeAfterSlider
         beforeImage={beforeImg.src}
         afterImage={afterImg.src}
+        beforeLabel={copy.transformation.before}
+        afterLabel={copy.transformation.after}
       />
     </div>
   </div>

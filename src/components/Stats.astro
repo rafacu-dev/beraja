@@ -1,28 +1,30 @@
 ---
-const stats = [
-  { value: '20+', label: 'Years of Experience' },
-  { value: 'Local', label: 'Gainesville-Based Team' },
-  { value: 'Finish', label: 'Detail-Driven Closeout' },
-];
+import { content, type Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
 ---
 
 <section
   class="w-full max-w-7xl mx-auto px-6 md:px-16 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-center"
 >
   <div data-animate="fade-up">
-    <span class="text-label-caps text-secondary mb-4 block">Why homeowners call Beraja</span>
+    <span class="text-label-caps text-secondary mb-4 block">{copy.stats.eyebrow}</span>
     <h2 class="text-display-lg-mobile md:text-headline-lg text-primary mb-6">
-      A remodeling partner close enough to show up and experienced enough to lead.
+      {copy.stats.heading}
     </h2>
     <p class="text-body-lg text-primary/72">
-      We serve Gainesville and the surrounding area with a construction mindset: clear scope,
-      organized scheduling, and finish quality that respects the home.
+      {copy.stats.body}
     </p>
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 w-full">
     {
-      stats.map((stat, index) => (
+      copy.stats.items.map((stat, index) => (
         <div
           data-animate="fade-up"
           class="bg-white border border-primary/10 px-6 py-7 shadow-[0_14px_45px_rgba(23,32,29,0.06)]"

@@ -1,9 +1,14 @@
 ---
 import heroImage from '../assets/after.jpg';
+import { business, content, serviceAreas, type Locale, phoneHref } from '../data/site';
 
-const primaryPhone = '+1 352-246-3543';
-const primaryPhoneHref = `tel:+${primaryPhone.replace(/\D/g, '')}`;
-const serviceAreas = ['Gainesville', 'Alachua', 'Newberry', 'High Springs', 'Ocala'];
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
+const primaryPhoneHref = phoneHref(business.phone);
 ---
 
 <section
@@ -12,7 +17,7 @@ const serviceAreas = ['Gainesville', 'Alachua', 'Newberry', 'High Springs', 'Oca
   <div class="absolute inset-0 z-0">
     <img
       src={heroImage.src}
-      alt="Luxury kitchen remodel completed by Beraja Remodeling"
+      alt={copy.hero.imageAlt}
       class="w-full h-full object-cover object-center md:object-[62%_center]"
       fetchpriority="high"
     />
@@ -45,21 +50,20 @@ const serviceAreas = ['Gainesville', 'Alachua', 'Newberry', 'High Springs', 'Oca
       href={primaryPhoneHref}
       class="hidden sm:inline-flex items-center justify-center border border-white/35 px-5 py-3 text-button text-white hover:bg-white hover:text-primary transition-colors"
     >
-      Call {primaryPhone}
+      {copy.cta.call} {business.phone}
     </a>
   </header>
 
   <div class="relative z-10 w-full px-6 pb-8 md:px-12 md:pb-12 mt-auto">
     <div class="max-w-3xl">
       <p class="text-label-caps text-secondary-light mb-5">
-        Construction & Remodeling in Gainesville, FL
+        {copy.hero.eyebrow}
       </p>
       <h2 class="font-display text-[46px] leading-[48px] md:text-[76px] md:leading-[78px] text-white mb-6">
-        Remodel your home with a local crew that manages the details.
+        {copy.hero.heading}
       </h2>
       <p class="text-body-lg text-white/82 max-w-2xl mb-8">
-        Kitchens, bathrooms, additions, and whole-home renovations built with premium finishes,
-        clear communication, and jobsite discipline across Gainesville and nearby communities.
+        {copy.hero.body}
       </p>
 
       <div class="flex flex-col sm:flex-row gap-3 mb-8">
@@ -67,20 +71,20 @@ const serviceAreas = ['Gainesville', 'Alachua', 'Newberry', 'High Springs', 'Oca
           href={primaryPhoneHref}
           class="inline-flex items-center justify-center bg-secondary px-6 py-4 text-button text-white hover:bg-secondary-dark transition-colors"
         >
-          Request an Estimate
+          {copy.cta.estimate}
         </a>
         <a
-          href="https://www.google.com/maps/place/Beraja+Remodeling+LLC/@29.6803102,-82.2962524,17z/data=!3m1!4b1!4m6!3m5!1s0x88e8a7ba8b3ef58b:0x4477fe32f390eeba!8m2!3d29.6803102!4d-82.2962524!16s%2Fg%2F11zg3ttp8g!18m1!1e1?entry=ttu"
+          href={business.mapUrl}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center border border-white/35 px-6 py-4 text-button text-white hover:bg-white hover:text-primary transition-colors"
         >
-          Find Us Locally
+          {copy.cta.local}
         </a>
       </div>
 
       <div class="flex flex-wrap gap-2 text-sm text-white/75">
-        <span class="text-white/95">Serving:</span>
+        <span class="text-white/95">{copy.hero.serving}</span>
         {serviceAreas.map((area) => <span class="border border-white/18 px-3 py-1">{area}</span>)}
       </div>
     </div>

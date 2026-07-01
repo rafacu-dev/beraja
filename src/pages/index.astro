@@ -1,18 +1,54 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Services from '../components/Services.astro';
-import Transformation from '../components/Transformation.astro';
-import Stats from '../components/Stats.astro';
-import Footer from '../components/Footer.astro';
+import { absoluteUrl, content } from '../data/site';
+
+const title = 'Beraja Remodeling | Gainesville Remodeling and Construction';
+const description =
+  'Choose English or Spanish for Beraja Remodeling, a Gainesville, FL construction and remodeling company serving North Florida.';
+const alternatePaths = {
+  en: content.en.path,
+  es: content.es.path,
+  'x-default': '/',
+};
 ---
 
-<Layout>
-  <main class="w-full min-h-screen bg-surface selection:bg-secondary selection:text-white">
-    <Hero />
-    <Services />
-    <Transformation />
-    <Stats />
-    <Footer />
+<Layout
+  title={title}
+  description={description}
+  lang="en-US"
+  canonicalPath="/"
+  alternatePaths={alternatePaths}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    url: absoluteUrl('/'),
+    description,
+  }}
+>
+  <main class="min-h-screen bg-primary text-white flex items-center">
+    <section class="max-w-4xl mx-auto px-6 py-20 text-center">
+      <p class="text-label-caps text-secondary-light mb-5">Beraja Remodeling</p>
+      <h1 class="font-display text-[44px] leading-[48px] md:text-[72px] md:leading-[76px] mb-6">
+        Gainesville Remodeling & Construction
+      </h1>
+      <p class="text-body-lg text-white/75 max-w-2xl mx-auto mb-8">
+        Serving homeowners in Gainesville, Jacksonville, Ocala, Alachua, Newberry, High Springs,
+        and nearby North Florida communities.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <a class="bg-secondary px-6 py-4 text-button hover:bg-secondary-dark transition-colors" href="/en/">
+          English
+        </a>
+        <a class="border border-white/35 px-6 py-4 text-button hover:bg-white hover:text-primary transition-colors" href="/es/">
+          Español
+        </a>
+      </div>
+    </section>
   </main>
+  <script is:inline>
+    const languages = navigator.languages || [navigator.language || 'en'];
+    const prefersSpanish = languages.some((language) => language.toLowerCase().startsWith('es'));
+    window.location.replace(prefersSpanish ? '/es/' : '/en/');
+  </script>
 </Layout>

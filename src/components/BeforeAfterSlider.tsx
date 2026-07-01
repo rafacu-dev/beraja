@@ -3,9 +3,16 @@ import { ChevronsLeftRight } from 'lucide-react';
 interface BeforeAfterSliderProps {
   beforeImage: string;
   afterImage: string;
+  beforeLabel?: string;
+  afterLabel?: string;
 }
 
-export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSliderProps) {
+export function BeforeAfterSlider({
+  beforeImage,
+  afterImage,
+  beforeLabel = 'BEFORE',
+  afterLabel = 'AFTER',
+}: BeforeAfterSliderProps) {
   return (
     <div
       data-before-after-slider
@@ -26,7 +33,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
       />
       <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 text-label-caps z-10">
-        AFTER
+        {afterLabel}
       </div>
 
       {/* Before Image (Foreground, clipped) */}
@@ -42,7 +49,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAfterSlider
         className="absolute top-4 left-4 bg-primary/80 text-white px-3 py-1 text-label-caps z-10"
         style={{ opacity: 1, transition: 'opacity 0.2s' }}
       >
-        BEFORE
+        {beforeLabel}
       </div>
 
       {/* Slider Handle */}

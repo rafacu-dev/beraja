@@ -1,0 +1,49 @@
+---
+import { content, servicePagePath, servicePages, type Locale } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
+const pages = servicePages.filter((page) => page.locale === locale);
+---
+
+<section class="w-full bg-white">
+  <div class="max-w-7xl mx-auto px-6 md:px-16 py-16 md:py-20">
+    <div class="max-w-3xl mb-10">
+      <span class="text-label-caps text-secondary mb-4 block">
+        {locale === 'es' ? 'Búsquedas locales' : 'Local remodeling searches'}
+      </span>
+      <h2 class="text-headline-lg text-primary mb-5">
+        {
+          locale === 'es'
+            ? 'Servicios por ciudad para encontrar a Beraja Remodeling en Google.'
+            : 'Service and city pages built for local Google searches.'
+        }
+      </h2>
+      <p class="text-body-lg text-primary/72">
+        {
+          locale === 'es'
+            ? 'Estas páginas ayudan a explicar con claridad dónde trabajamos y qué servicios ofrecemos en inglés y español.'
+            : 'These pages make the service area and remodeling specialties explicit in English and Spanish.'
+        }
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        pages.map((page) => (
+          <a
+            href={servicePagePath(page)}
+            class="border border-primary/10 px-5 py-5 hover:border-secondary hover:text-secondary transition-colors"
+          >
+            <span class="text-label-caps text-primary/45 block mb-2">{page.city}, FL</span>
+            <span class="text-body-lg text-primary">{page.service}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

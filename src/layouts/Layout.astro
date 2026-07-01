@@ -1,35 +1,38 @@
 ---
 import '../styles/global.css';
+import { absoluteUrl, content } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
+  lang?: string;
+  canonicalPath?: string;
+  alternatePaths?: Record<string, string>;
+  structuredData?: unknown;
 }
 
 const {
   title = 'Beraja Remodeling | Construction & Remodeling in Gainesville, FL',
   description = 'Kitchen, bathroom, and whole-home remodeling for Gainesville, FL and surrounding communities. Built with clear communication, premium materials, and careful project management.',
+  keywords,
+  lang = 'en-US',
+  canonicalPath = '/en/',
+  alternatePaths = {
+    en: content.en.path,
+    es: content.es.path,
+    'x-default': '/',
+  },
+  structuredData,
 } = Astro.props;
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'HomeAndConstructionBusiness',
-  name: 'Beraja Remodeling LLC',
-  description,
-  telephone: '+1-352-246-3543',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Gainesville',
-    addressRegion: 'FL',
-    addressCountry: 'US',
-  },
-  areaServed: ['Gainesville FL', 'Alachua FL', 'Newberry FL', 'High Springs FL', 'Ocala FL'],
-  sameAs: ['https://www.facebook.com/profile.php?id=61559592172474'],
-};
+const canonicalUrl = absoluteUrl(canonicalPath);
+const ogLocale = lang.startsWith('es') ? 'es_US' : 'en_US';
+const jsonLd = structuredData ? (Array.isArray(structuredData) ? structuredData : [structuredData]) : [];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,13 +40,26 @@ const structuredData = {
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <meta name="theme-color" content="#17201d" />
+    <link rel="canonical" href={canonicalUrl} />
+    {
+      Object.entries(alternatePaths).map(([hrefLang, path]) => (
+        <link rel="alternate" hreflang={hrefLang} href={absoluteUrl(path)} />
+      ))
+    }
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    {
+      jsonLd.map((item) => (
+        <script type="application/ld+json" set:html={JSON.stringify(item)} />
+      ))
+    }
     <!-- Google Fonts preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
