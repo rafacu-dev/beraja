@@ -7,13 +7,29 @@ interface Props {
 }
 
 const {
-  title = 'Beraja Remodeling — Transformaciones de Élite',
-  description = 'Elevando el estándar de la construcción. Transformamos residencias con precisión técnica y acabados de élite.',
+  title = 'Beraja Remodeling | Construction & Remodeling in Gainesville, FL',
+  description = 'Kitchen, bathroom, and whole-home remodeling for Gainesville, FL and surrounding communities. Built with clear communication, premium materials, and careful project management.',
 } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  name: 'Beraja Remodeling LLC',
+  description,
+  telephone: '+1-352-246-3543',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Gainesville',
+    addressRegion: 'FL',
+    addressCountry: 'US',
+  },
+  areaServed: ['Gainesville FL', 'Alachua FL', 'Newberry FL', 'High Springs FL', 'Ocala FL'],
+  sameAs: ['https://www.facebook.com/profile.php?id=61559592172474'],
+};
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +37,13 @@ const {
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#17201d" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="en_US" />
     <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <!-- Google Fonts preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
