@@ -51,6 +51,81 @@ const structuredData = {
   <body>
     <slot />
     <script>
+      const setBeforeAfterPosition = (slider: HTMLElement, percentage: number) => {
+        const position = Math.max(0, Math.min(100, percentage));
+        const beforeImage = slider.querySelector<HTMLElement>('[data-before-after-before]');
+        const handle = slider.querySelector<HTMLElement>('[data-before-after-handle]');
+        const beforeLabel = slider.querySelector<HTMLElement>('[data-before-after-before-label]');
+
+        if (beforeImage) {
+          beforeImage.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+        }
+
+        if (handle) {
+          handle.style.left = `${position}%`;
+        }
+
+        if (beforeLabel) {
+          beforeLabel.style.opacity = position < 10 ? '0' : '1';
+        }
+
+        slider.setAttribute('aria-valuenow', String(Math.round(position)));
+        slider.setAttribute(
+          'aria-valuetext',
+          `${Math.round(position)} percent before image visible`
+        );
+      };
+
+      document.querySelectorAll<HTMLElement>('[data-before-after-slider]').forEach((slider) => {
+        if (slider.dataset.beforeAfterReady === 'true') return;
+
+        slider.dataset.beforeAfterReady = 'true';
+        let activePointerId: number | null = null;
+
+        const updateFromClientX = (clientX: number) => {
+          const rect = slider.getBoundingClientRect();
+          const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+          setBeforeAfterPosition(slider, (x / rect.width) * 100);
+        };
+
+        slider.addEventListener('pointerdown', (event) => {
+          activePointerId = event.pointerId;
+          slider.setPointerCapture(event.pointerId);
+          updateFromClientX(event.clientX);
+        });
+
+        slider.addEventListener('pointermove', (event) => {
+          if (activePointerId !== event.pointerId) return;
+          updateFromClientX(event.clientX);
+        });
+
+        const stopDragging = (event: PointerEvent) => {
+          if (activePointerId !== event.pointerId) return;
+
+          if (slider.hasPointerCapture(event.pointerId)) {
+            slider.releasePointerCapture(event.pointerId);
+          }
+
+          activePointerId = null;
+        };
+
+        slider.addEventListener('pointerup', stopDragging);
+        slider.addEventListener('pointercancel', stopDragging);
+        slider.addEventListener('lostpointercapture', () => {
+          activePointerId = null;
+        });
+
+        slider.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+          event.preventDefault();
+          const currentPosition = Number(slider.getAttribute('aria-valuenow') || 50);
+          const nextPosition =
+            event.key === 'ArrowLeft' ? currentPosition - 5 : currentPosition + 5;
+          setBeforeAfterPosition(slider, nextPosition);
+        });
+      });
+
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
